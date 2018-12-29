@@ -1,0 +1,3 @@
+Amazon.com, Inc. is located in Seattle, WA and was founded July 5th, 1994 by Jeff Bezos, allowing customers to buy everything from books to blenders. Seattle is north of Portland and south of Vancouver, BC. Other notable Seattle - based companies are Starbucks and Boeing.
+
+citation: https://console.aws.amazon.com/comprehend/v2/home?region=us-east-1#home

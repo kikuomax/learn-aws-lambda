@@ -1,0 +1,25 @@
+{
+  "LambdaFunctionConfigurations": [
+    {
+      "Id": "TextPutIntoMyBucket",
+      "LambdaFunctionArn": "arn:aws:lambda:ap-northeast-1:123456789012:function:comprehend-s3",
+      "Events": [
+        "s3:ObjectCreated:Put"
+      ],
+      "Filter": {
+        "Key": {
+          "FilterRules": [
+            {
+              "Name": "Prefix",
+              "Value": "inbox/"
+            },
+            {
+              "Name": "Suffix",
+              "Value": ".txt"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
