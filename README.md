@@ -77,7 +77,7 @@ aws s3api put-public-access-block --bucket my-bucket --public-access-block-confi
 
 Before enabling the notification from the S3 bucket to the Lambda function, add an appropriate permission to the function.
 
-```
+```bash
 aws lambda add-permission --function-name comprehend-s3 --principal s3.amazonaws.com --statement-id something_unique --action "lambda:InvokeFunction" --source-arn arn:aws:s3:::my-bucket --source-account 123456789012
 ```
 Do not forget to replace `--statement-id something_unique` and `--source-acount 123456789012` appropriately.
@@ -129,10 +129,95 @@ Test if the Lambda function is invoked when an object is put into the bucket.
 aws s3 cp test/test.txt s3://my-bucket/inbox/test.txt
 ```
 
-You can examine logs on CloudWatch Logs.
+You can examine logs in the CloudWatch Logs.
 Its log group name should be `/aws/lambda/comprehend-s3`.
-I am going to retain logs for a week.
+They are retained forever, though I am going to change it to a week.
 
 ```bash
 aws logs put-retention-policy --log-group-name /aws/lambda/comprehend-s3 --retention-in-days 7
 ```
+
+## Obtaining the contents of a given S3 object from the Lambda function
+
+### Allowing the Lambda function to get S3 objects from the bucket
+
+Define a policy that can get S3 objects from `my-bucket`.
+
+```bash
+aws iam create-policy --path /learn-aws-lambda/ --policy-name S3GetObject_my-bucket_inbox --policy-document file://iam/policy/S3GetObject_my-bucket_inbox.json --description "Allows getting an object from s3://my-bucket/inbox"
+```
+
+The following is the [policy document](iam/policy/S3GetObject_my-bucket_inbox.json),
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::my-bucket/inbox/*"
+      ]
+    }
+  ]
+}
+```
+
+The ARN of the new policy should be similar to `arn:aws:iam::123456789012:policy/learn-aws-lambda/S3GetObject_my-bucket_inbox`.
+
+Attach the policy to the role `comprehend-s3`.
+
+```bash
+aws iam attach-role-policy --role-name comprehend-s3 --policy-arn arn:aws:iam::123456789012:policy/learn-aws-lambda/S3GetObject_my-bucket_inbox
+```
+
+### Updating the Lambda function
+
+We are going to update the Lambda function with another code [`lambda_function_2.py`](scripts/lambda_function_2.py).
+Before updating the function, zip the code.
+
+```bash
+cd scripts
+zip lambda_function_2.zip lambda_function_2.py
+cd ..
+```
+
+Then update the function with the new zip file.
+
+```bash
+aws lambda update-function-code --function-name comprehend-s3 --zip-file fileb://scripts/lambda_function_2.zip
+```
+
+The handler function also has to be changed.
+
+```bash
+aws lambda update-function-configuration --function-name comprehend-s3 --handler lambda_function_2.lambda_handler
+```
+
+I found that no stack trace is left in the CloudWatch Logs when the Lambda function fails.
+This is very inconvenient, so I wrapped the main function with a `try-except` clause to log the stack trace of any exception.
+
+```python
+def lambda_handler(event, context):
+    global LOGGER
+    try:
+        return main(event, context)
+    except Exception as e:
+        # prints the stack trace of the exception
+        traceback.print_exc()
+        LOGGER.error(e)
+        raise e
+```
+
+### Replacing the test text
+
+Copy the test text into the S3 bucket again.
+
+```bash
+aws s3 cp test/test.txt s3://my-bucket/inbox/test.txt
+```
+
+Check the CloudWatch Logs to see if the function is invoked.
