@@ -324,6 +324,16 @@ You will get results similar to the following by running the command shown above
 ]
 ```
 
+### Changing logging level of the Lambda function
+
+The [third script](scripts/lambda_function_3.py) interprets the environment variable `COMPREHEND_S3_LOGGING_LEVEL` as the logging level of the function, which is `DEBUG` by default.
+You can control the logging level of the Lambda function by configuring the environment variable `COMPREHEND_S3_LOGGING_LEVEL`.
+For instance, you can change it to `INFO` with the following command,
+
+```bash
+aws lambda update-function-configuration --function-name comprehend-s3 --environment 'Variables={COMPREHEND_S3_LOGGING_LEVEL=INFO}'
+```
+
 ## Generating documentation with Sphinx
 
 **This section has really nothing to do with AWS.**

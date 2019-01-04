@@ -1,11 +1,19 @@
 from __future__ import print_function
 import boto3
 import logging
+import os
 import traceback
 
 
+# logging level may be specified in
+# the environment variable COMPREHEND_S3_LOGGING_LEVEL
+LOGGING_LEVEL_ENV_NAME = 'COMPREHEND_S3_LOGGING_LEVEL'
+DEFAULT_LOGGING_LEVEL = 'DEBUG'
+LOGGING_LEVEL = LOGGING_LEVEL_ENV_NAME in os.environ and os.environ[LOGGING_LEVEL_ENV_NAME] or DEFAULT_LOGGING_LEVEL
+LOGGING_LEVEL = LOGGING_LEVEL in ('NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL') and LOGGING_LEVEL or DEFAULT_LOGGING_LEVEL
 LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.DEBUG)
+print('setting logging level to %s' % LOGGING_LEVEL)
+LOGGER.setLevel(getattr(logging, LOGGING_LEVEL))
 
 COMPREHEND_REGION = 'us-east-2'
     # specifies the region where Amazon Comprehend is hosted
