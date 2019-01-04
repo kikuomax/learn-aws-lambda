@@ -323,3 +323,32 @@ You will get results similar to the following by running the command shown above
     "\n"
 ]
 ```
+
+## Generating documentation with Sphinx
+
+**This section has really nothing to do with AWS.**
+
+You may have noticed that functions in the [third script](scripts/lambda_function_3.py) have docstrings.
+You can generate documentation with [Sphinx](http://www.sphinx-doc.org/en/master/) by running the script in the [`docs` direcotry](docs).
+
+Take the following steps,
+
+1. Install Sphinx.
+
+    ```bash
+    pip install -U Sphinx
+    ```
+
+2. Move down to the `docs` directory.
+
+    ```bash
+    cd docs
+    ```
+
+3. Run the make script.
+
+    ```bash
+    make html
+    ```
+
+4. You will find the `html` directory in the `build` directory.
