@@ -1,5 +1,7 @@
 # Getting Started with AWS Lambda
 
+English/[日本語](README_ja.md)
+
 ## Introduction
 
 This repository is just a note for myself, but I hope someone might feel this useful.
@@ -15,8 +17,7 @@ I am primarily working on the Tokyo region (`ap-northeast-1`), so region specifi
 **You need a credential with sufficient permissions to complete the following AWS manipulations.**
 I set up a profile for me but I omitted it in the following examples.
 
-The following examples use [AWS CLI](https://aws.amazon.com/cli/) to configure components.
-If you just started learning AWS Lambda, I recommend you first to try the AWS Lambda Console like I did.
+The following examples use [AWS CLI](https://aws.amazon.com/cli/) to configure components in favor of reproducibility, though, if you just started learning AWS Lambda, I recommend you first to try the AWS Lambda Console like I did.
 
 ## Creating a Lambda function
 
@@ -60,9 +61,9 @@ The ARN of the function will be `arn:aws:lambda:ap-northeast-1:123456789012:func
 
 Let's invoke the Lambda function when an S3 object is PUT into a specific location.
 
-### Creating an S3 bucket
+### Creating a dedicated S3 bucket
 
-Create an S3 bucket `my-bucket`.
+Create a dedicated S3 bucket `my-bucket`.
 Note that `my-bucket` is too general that you have to choose a more specific name.
 
 ```bash
@@ -75,7 +76,7 @@ Block public access to the bucket, because it is unnecessary in this use case.
 aws s3api put-public-access-block --bucket my-bucket --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
 ```
 
-### Adding a permission to the Lambda function
+### Adding a permission for S3 to the Lambda function
 
 Before enabling the notification from the S3 bucket to the Lambda function, add an appropriate permission to the function.
 
@@ -88,7 +89,7 @@ Do not forget to replace `--statement-id something_unique` and `--source-acount 
 ### Adding a trigger to the S3 bucket
 
 Enable the notification that is triggered when an object is `PUT` into a path like `inbox/*.txt`.
-The following is the configuration,
+The following is the [configuration](s3/notificiation-config.json),
 
 ```json
 {
@@ -134,7 +135,7 @@ aws s3 cp test/test.txt s3://my-bucket/inbox/test.txt
 
 You can examine logs in CloudWatch Logs.
 Its log group name should be `/aws/lambda/comprehend-s3`.
-They are retained forever by default, so I am going to change its retention period to a week to save storage.
+They are retained forever by default, so I changed its retention period to a week to save storage.
 
 ```bash
 aws logs put-retention-policy --log-group-name /aws/lambda/comprehend-s3 --retention-in-days 7
@@ -146,7 +147,7 @@ Let's add a contents retrieval feature to the Lambda function.
 
 ### Allowing the Lambda function to get S3 objects from the bucket
 
-Define a policy that can get S3 objects from `my-bucket`.
+Define a policy that allows retrieval of S3 objects from `my-bucket`.
 
 ```bash
 aws iam create-policy --path /learn-aws-lambda/ --policy-name S3GetObject_my-bucket_inbox --policy-document file://iam/policy/S3GetObject_my-bucket_inbox.json --description "Allows getting an object from s3://my-bucket/inbox"
@@ -202,8 +203,8 @@ The handler function also has to be changed.
 aws lambda update-function-configuration --function-name comprehend-s3 --handler lambda_function_2.lambda_handler
 ```
 
-I found that no stack trace is left in CloudWatch Logs when the Lambda function fails.
-This is very inconvenient, so I wrapped the main function with a `try-except` clause to log the stack trace of any exception raised from it.
+By the way, I found that no stack trace is left in CloudWatch Logs when the Lambda function fails.
+This was very inconvenient, so I wrapped the main function with a `try-except` clause to log the stack trace of any exception raised from it.
 
 ```python
 def lambda_handler(event, context):
@@ -269,9 +270,9 @@ Do not forget to replace the handler function with `lambda_function_3.lambda_han
 aws lambda update-function-configuration --function-name comprehend-s3 --handler lambda_function_3.lambda_handler
 ```
 
-My Lambda function is running in the Tokyo region and any [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) client is associated with that region by default, but unfortunately it does not host Amazon Comprehend as of January 4, 2019.
+My Lambda function is running in the Tokyo region and any [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) client is associated with that region by default, but unfortunately the Tokyo region does not host Amazon Comprehend as of January 4, 2019.
 So I configured my Amazon Comprehend client with the Ohio region; i.e., `us-east-2`.
-The region does not matter as long as it supports Amazon Comprehend.
+Anyway, the region does not matter as long as it supports Amazon Comprehend.
 
 ```python
 COMPREHEND_REGION = 'us-east-2'
@@ -282,13 +283,8 @@ COMPREHEND_REGION = 'us-east-2'
 comprehend = boto3.client('comprehend', region_name=COMPREHEND_REGION)
 ```
 
-### Testing if the Lambda function works
-
-Update the S3 object and check CloudWatch Logs to see if the Lambda function works.
-
-```bash
-aws s3 cp test/test.txt s3://my-bucket/inbox/test.txt
-```
+Well, update the S3 object and check CloudWatch Logs to see if the Lambda function works.
+I refrain from repeating the trivial command.
 
 ### Changing logging level of the Lambda function
 
@@ -348,11 +344,21 @@ Do not forget to replace the handler with `lambda_function_4.lambda_handler`.
 aws lambda update-function-configuration --function-name comprehend-s3 --handler lambda_function_4.lambda_handler
 ```
 
-Update the S3 object and check CloudWatch Logs to see if the Lambda function works.
+### Testing if the Lambda function works
+
+Well, update the S3 object and check CloudWatch Logs to see if the Lambda function is invoked.
+
+You will find a JSON file at `s3://my-bucket/comprehend/test.json`.
+Test if it matches the [reference](test/test-ref.json).
+
+```bash
+aws s3 cp s3://my-bucket/comprehend/test.json test/test.json
+diff test/test.json test/test-ref.json
+```
 
 ### Retrieving the latest logs through CLI
 
-You can also check the latest logs through CLI.
+Let's check the latest logs through CLI.
 The following are brief steps to get logs,
 
 1. Obtain the latest log stream with `aws logs describe-log-streams`.
@@ -387,8 +393,8 @@ You will get results similar to the following by running the command shown above
 
 **This section has really nothing to do with AWS.**
 
-You may have noticed that functions in the [third script](scripts/lambda_function_3.py) have docstrings.
-You can generate documentation with [Sphinx](http://www.sphinx-doc.org/en/master/) by running the script in the [`docs` direcotry](docs).
+You may have noticed that functions in the [fourth script](scripts/lambda_function_4.py) have [docstrings](https://www.python.org/dev/peps/pep-0257/).
+You can generate documentation with [Sphinx](http://www.sphinx-doc.org/en/master/) by running `make` in the [`docs` directory](docs).
 
 Take the following steps,
 
@@ -404,7 +410,7 @@ Take the following steps,
     cd docs
     ```
 
-3. Run the make script.
+3. Run the `make` script.
 
     ```bash
     make html

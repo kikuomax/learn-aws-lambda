@@ -1,0 +1,818 @@
+{
+  "DominantLanguage": {
+    "LanguageCode": "en",
+    "Score": 0.9989259839057922
+  },
+  "Entities": [
+    {
+      "Score": 0.900368869304657,
+      "Type": "ORGANIZATION",
+      "Text": "Amazon.com, Inc",
+      "BeginOffset": 0,
+      "EndOffset": 15
+    },
+    {
+      "Score": 0.8933648467063904,
+      "Type": "LOCATION",
+      "Text": "Seattle, WA",
+      "BeginOffset": 31,
+      "EndOffset": 42
+    },
+    {
+      "Score": 0.9979841709136963,
+      "Type": "DATE",
+      "Text": "July 5th, 1994",
+      "BeginOffset": 59,
+      "EndOffset": 73
+    },
+    {
+      "Score": 0.9998443722724915,
+      "Type": "PERSON",
+      "Text": "Jeff Bezos",
+      "BeginOffset": 77,
+      "EndOffset": 87
+    },
+    {
+      "Score": 0.9739845991134644,
+      "Type": "LOCATION",
+      "Text": "Seattle",
+      "BeginOffset": 150,
+      "EndOffset": 157
+    },
+    {
+      "Score": 0.9932572841644287,
+      "Type": "LOCATION",
+      "Text": "Portland",
+      "BeginOffset": 170,
+      "EndOffset": 178
+    },
+    {
+      "Score": 0.9429593086242676,
+      "Type": "LOCATION",
+      "Text": "Vancouver, BC",
+      "BeginOffset": 192,
+      "EndOffset": 205
+    },
+    {
+      "Score": 0.9903364181518555,
+      "Type": "LOCATION",
+      "Text": "Seattle",
+      "BeginOffset": 221,
+      "EndOffset": 228
+    },
+    {
+      "Score": 0.9935558438301086,
+      "Type": "ORGANIZATION",
+      "Text": "Starbucks",
+      "BeginOffset": 251,
+      "EndOffset": 260
+    },
+    {
+      "Score": 0.9891706109046936,
+      "Type": "ORGANIZATION",
+      "Text": "Boeing",
+      "BeginOffset": 265,
+      "EndOffset": 271
+    },
+    {
+      "Score": 0.9985479712486267,
+      "Type": "OTHER",
+      "Text": "https://console.aws.amazon.com/comprehend/v2/home?region=us-east-1#home",
+      "BeginOffset": 284,
+      "EndOffset": 355
+    }
+  ],
+  "KeyPhrases": [
+    {
+      "Score": 0.8604925274848938,
+      "Text": "Amazon.com",
+      "BeginOffset": 0,
+      "EndOffset": 10
+    },
+    {
+      "Score": 0.9506077170372009,
+      "Text": "Seattle, WA",
+      "BeginOffset": 31,
+      "EndOffset": 42
+    },
+    {
+      "Score": 0.9101492166519165,
+      "Text": "July 5th, 1994",
+      "BeginOffset": 59,
+      "EndOffset": 73
+    },
+    {
+      "Score": 0.999458372592926,
+      "Text": "Jeff Bezos",
+      "BeginOffset": 77,
+      "EndOffset": 87
+    },
+    {
+      "Score": 0.999697208404541,
+      "Text": "customers",
+      "BeginOffset": 98,
+      "EndOffset": 107
+    },
+    {
+      "Score": 0.9959203004837036,
+      "Text": "books",
+      "BeginOffset": 131,
+      "EndOffset": 136
+    },
+    {
+      "Score": 0.9887219667434692,
+      "Text": "blenders",
+      "BeginOffset": 140,
+      "EndOffset": 148
+    },
+    {
+      "Score": 0.9961830973625183,
+      "Text": "Seattle",
+      "BeginOffset": 150,
+      "EndOffset": 157
+    },
+    {
+      "Score": 0.8945672512054443,
+      "Text": "Portland and south",
+      "BeginOffset": 170,
+      "EndOffset": 188
+    },
+    {
+      "Score": 0.9522891640663147,
+      "Text": "Vancouver, BC",
+      "BeginOffset": 192,
+      "EndOffset": 205
+    },
+    {
+      "Score": 0.9650034308433533,
+      "Text": "Other notable Seattle - based companies",
+      "BeginOffset": 207,
+      "EndOffset": 246
+    },
+    {
+      "Score": 0.9557671546936035,
+      "Text": "Starbucks and Boeing",
+      "BeginOffset": 251,
+      "EndOffset": 271
+    },
+    {
+      "Score": 0.9025203585624695,
+      "Text": "citation",
+      "BeginOffset": 274,
+      "EndOffset": 282
+    }
+  ],
+  "Sentiment": {
+    "Sentiment": "NEUTRAL",
+    "SentimentScore": {
+      "Positive": 0.026776952669024467,
+      "Negative": 0.00036826630821451545,
+      "Neutral": 0.9723372459411621,
+      "Mixed": 0.0005175479454919696
+    },
+    "ResponseMetadata": {
+      "RequestId": "c080e43c-10dd-11e9-b1a4-a5a91e2cf7d0",
+      "HTTPStatusCode": 200,
+      "HTTPHeaders": {
+        "date": "Sat, 05 Jan 2019 11:33:41 GMT",
+        "content-type": "application/x-amz-json-1.1",
+        "content-length": "165",
+        "connection": "keep-alive",
+        "x-amzn-requestid": "c080e43c-10dd-11e9-b1a4-a5a91e2cf7d0"
+      },
+      "RetryAttempts": 0
+    }
+  },
+  "SyntaxTokens": [
+    {
+      "TokenId": 1,
+      "Text": "Amazon.com",
+      "BeginOffset": 0,
+      "EndOffset": 10,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.947820782661438
+      }
+    },
+    {
+      "TokenId": 2,
+      "Text": ",",
+      "BeginOffset": 10,
+      "EndOffset": 11,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999784231185913
+      }
+    },
+    {
+      "TokenId": 3,
+      "Text": "Inc.",
+      "BeginOffset": 12,
+      "EndOffset": 16,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9966172575950623
+      }
+    },
+    {
+      "TokenId": 4,
+      "Text": "is",
+      "BeginOffset": 17,
+      "EndOffset": 19,
+      "PartOfSpeech": {
+        "Tag": "AUX",
+        "Score": 0.9898472428321838
+      }
+    },
+    {
+      "TokenId": 5,
+      "Text": "located",
+      "BeginOffset": 20,
+      "EndOffset": 27,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9997583031654358
+      }
+    },
+    {
+      "TokenId": 6,
+      "Text": "in",
+      "BeginOffset": 28,
+      "EndOffset": 30,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9998189806938171
+      }
+    },
+    {
+      "TokenId": 7,
+      "Text": "Seattle",
+      "BeginOffset": 31,
+      "EndOffset": 38,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9976751208305359
+      }
+    },
+    {
+      "TokenId": 8,
+      "Text": ",",
+      "BeginOffset": 38,
+      "EndOffset": 39,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999964237213135
+      }
+    },
+    {
+      "TokenId": 9,
+      "Text": "WA",
+      "BeginOffset": 40,
+      "EndOffset": 42,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9900446534156799
+      }
+    },
+    {
+      "TokenId": 10,
+      "Text": "and",
+      "BeginOffset": 43,
+      "EndOffset": 46,
+      "PartOfSpeech": {
+        "Tag": "CONJ",
+        "Score": 0.9999877214431763
+      }
+    },
+    {
+      "TokenId": 11,
+      "Text": "was",
+      "BeginOffset": 47,
+      "EndOffset": 50,
+      "PartOfSpeech": {
+        "Tag": "AUX",
+        "Score": 0.9948083758354187
+      }
+    },
+    {
+      "TokenId": 12,
+      "Text": "founded",
+      "BeginOffset": 51,
+      "EndOffset": 58,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.999840259552002
+      }
+    },
+    {
+      "TokenId": 13,
+      "Text": "July",
+      "BeginOffset": 59,
+      "EndOffset": 63,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.999873161315918
+      }
+    },
+    {
+      "TokenId": 14,
+      "Text": "5th",
+      "BeginOffset": 64,
+      "EndOffset": 67,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.892727255821228
+      }
+    },
+    {
+      "TokenId": 15,
+      "Text": ",",
+      "BeginOffset": 67,
+      "EndOffset": 68,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999994039535522
+      }
+    },
+    {
+      "TokenId": 16,
+      "Text": "1994",
+      "BeginOffset": 69,
+      "EndOffset": 73,
+      "PartOfSpeech": {
+        "Tag": "NUM",
+        "Score": 0.9993818998336792
+      }
+    },
+    {
+      "TokenId": 17,
+      "Text": "by",
+      "BeginOffset": 74,
+      "EndOffset": 76,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9994346499443054
+      }
+    },
+    {
+      "TokenId": 18,
+      "Text": "Jeff",
+      "BeginOffset": 77,
+      "EndOffset": 81,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9988659620285034
+      }
+    },
+    {
+      "TokenId": 19,
+      "Text": "Bezos",
+      "BeginOffset": 82,
+      "EndOffset": 87,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.999064028263092
+      }
+    },
+    {
+      "TokenId": 20,
+      "Text": ",",
+      "BeginOffset": 87,
+      "EndOffset": 88,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999984502792358
+      }
+    },
+    {
+      "TokenId": 21,
+      "Text": "allowing",
+      "BeginOffset": 89,
+      "EndOffset": 97,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9984827637672424
+      }
+    },
+    {
+      "TokenId": 22,
+      "Text": "customers",
+      "BeginOffset": 98,
+      "EndOffset": 107,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9999815225601196
+      }
+    },
+    {
+      "TokenId": 23,
+      "Text": "to",
+      "BeginOffset": 108,
+      "EndOffset": 110,
+      "PartOfSpeech": {
+        "Tag": "PART",
+        "Score": 0.9997538924217224
+      }
+    },
+    {
+      "TokenId": 24,
+      "Text": "buy",
+      "BeginOffset": 111,
+      "EndOffset": 114,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9999936819076538
+      }
+    },
+    {
+      "TokenId": 25,
+      "Text": "everything",
+      "BeginOffset": 115,
+      "EndOffset": 125,
+      "PartOfSpeech": {
+        "Tag": "PRON",
+        "Score": 0.9999759197235107
+      }
+    },
+    {
+      "TokenId": 26,
+      "Text": "from",
+      "BeginOffset": 126,
+      "EndOffset": 130,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9994418025016785
+      }
+    },
+    {
+      "TokenId": 27,
+      "Text": "books",
+      "BeginOffset": 131,
+      "EndOffset": 136,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9997385144233704
+      }
+    },
+    {
+      "TokenId": 28,
+      "Text": "to",
+      "BeginOffset": 137,
+      "EndOffset": 139,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9981294274330139
+      }
+    },
+    {
+      "TokenId": 29,
+      "Text": "blenders",
+      "BeginOffset": 140,
+      "EndOffset": 148,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9998109936714172
+      }
+    },
+    {
+      "TokenId": 30,
+      "Text": ".",
+      "BeginOffset": 148,
+      "EndOffset": 149,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999961853027344
+      }
+    },
+    {
+      "TokenId": 31,
+      "Text": "Seattle",
+      "BeginOffset": 150,
+      "EndOffset": 157,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9722186923027039
+      }
+    },
+    {
+      "TokenId": 32,
+      "Text": "is",
+      "BeginOffset": 158,
+      "EndOffset": 160,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9896440505981445
+      }
+    },
+    {
+      "TokenId": 33,
+      "Text": "north",
+      "BeginOffset": 161,
+      "EndOffset": 166,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.38699111342430115
+      }
+    },
+    {
+      "TokenId": 34,
+      "Text": "of",
+      "BeginOffset": 167,
+      "EndOffset": 169,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9992634654045105
+      }
+    },
+    {
+      "TokenId": 35,
+      "Text": "Portland",
+      "BeginOffset": 170,
+      "EndOffset": 178,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9965575933456421
+      }
+    },
+    {
+      "TokenId": 36,
+      "Text": "and",
+      "BeginOffset": 179,
+      "EndOffset": 182,
+      "PartOfSpeech": {
+        "Tag": "CONJ",
+        "Score": 0.9999935626983643
+      }
+    },
+    {
+      "TokenId": 37,
+      "Text": "south",
+      "BeginOffset": 183,
+      "EndOffset": 188,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.601900041103363
+      }
+    },
+    {
+      "TokenId": 38,
+      "Text": "of",
+      "BeginOffset": 189,
+      "EndOffset": 191,
+      "PartOfSpeech": {
+        "Tag": "ADP",
+        "Score": 0.9998219609260559
+      }
+    },
+    {
+      "TokenId": 39,
+      "Text": "Vancouver",
+      "BeginOffset": 192,
+      "EndOffset": 201,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9977989792823792
+      }
+    },
+    {
+      "TokenId": 40,
+      "Text": ",",
+      "BeginOffset": 201,
+      "EndOffset": 202,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999786615371704
+      }
+    },
+    {
+      "TokenId": 41,
+      "Text": "BC",
+      "BeginOffset": 203,
+      "EndOffset": 205,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9844163060188293
+      }
+    },
+    {
+      "TokenId": 42,
+      "Text": ".",
+      "BeginOffset": 205,
+      "EndOffset": 206,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999991655349731
+      }
+    },
+    {
+      "TokenId": 43,
+      "Text": "Other",
+      "BeginOffset": 207,
+      "EndOffset": 212,
+      "PartOfSpeech": {
+        "Tag": "ADJ",
+        "Score": 0.9807634353637695
+      }
+    },
+    {
+      "TokenId": 44,
+      "Text": "notable",
+      "BeginOffset": 213,
+      "EndOffset": 220,
+      "PartOfSpeech": {
+        "Tag": "ADJ",
+        "Score": 0.99599289894104
+      }
+    },
+    {
+      "TokenId": 45,
+      "Text": "Seattle",
+      "BeginOffset": 221,
+      "EndOffset": 228,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9251143932342529
+      }
+    },
+    {
+      "TokenId": 46,
+      "Text": "-",
+      "BeginOffset": 229,
+      "EndOffset": 230,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999912977218628
+      }
+    },
+    {
+      "TokenId": 47,
+      "Text": "based",
+      "BeginOffset": 231,
+      "EndOffset": 236,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9981232285499573
+      }
+    },
+    {
+      "TokenId": 48,
+      "Text": "companies",
+      "BeginOffset": 237,
+      "EndOffset": 246,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9999904632568359
+      }
+    },
+    {
+      "TokenId": 49,
+      "Text": "are",
+      "BeginOffset": 247,
+      "EndOffset": 250,
+      "PartOfSpeech": {
+        "Tag": "VERB",
+        "Score": 0.9882644414901733
+      }
+    },
+    {
+      "TokenId": 50,
+      "Text": "Starbucks",
+      "BeginOffset": 251,
+      "EndOffset": 260,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9371582865715027
+      }
+    },
+    {
+      "TokenId": 51,
+      "Text": "and",
+      "BeginOffset": 261,
+      "EndOffset": 264,
+      "PartOfSpeech": {
+        "Tag": "CONJ",
+        "Score": 0.9999889135360718
+      }
+    },
+    {
+      "TokenId": 52,
+      "Text": "Boeing",
+      "BeginOffset": 265,
+      "EndOffset": 271,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.9984195232391357
+      }
+    },
+    {
+      "TokenId": 53,
+      "Text": ".",
+      "BeginOffset": 271,
+      "EndOffset": 272,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999984502792358
+      }
+    },
+    {
+      "TokenId": 54,
+      "Text": "citation",
+      "BeginOffset": 274,
+      "EndOffset": 282,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9503761529922485
+      }
+    },
+    {
+      "TokenId": 55,
+      "Text": ":",
+      "BeginOffset": 282,
+      "EndOffset": 283,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9989145994186401
+      }
+    },
+    {
+      "TokenId": 56,
+      "Text": "https://console.aws.amazon.com/comprehend/v2/home",
+      "BeginOffset": 284,
+      "EndOffset": 333,
+      "PartOfSpeech": {
+        "Tag": "PROPN",
+        "Score": 0.7012616395950317
+      }
+    },
+    {
+      "TokenId": 57,
+      "Text": "?",
+      "BeginOffset": 333,
+      "EndOffset": 334,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9999983310699463
+      }
+    },
+    {
+      "TokenId": 58,
+      "Text": "region",
+      "BeginOffset": 334,
+      "EndOffset": 340,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.8912944793701172
+      }
+    },
+    {
+      "TokenId": 59,
+      "Text": "us",
+      "BeginOffset": 341,
+      "EndOffset": 343,
+      "PartOfSpeech": {
+        "Tag": "PRON",
+        "Score": 0.4774782359600067
+      }
+    },
+    {
+      "TokenId": 60,
+      "Text": "-",
+      "BeginOffset": 348,
+      "EndOffset": 349,
+      "PartOfSpeech": {
+        "Tag": "PUNCT",
+        "Score": 0.9996137022972107
+      }
+    },
+    {
+      "TokenId": 61,
+      "Text": "1",
+      "BeginOffset": 349,
+      "EndOffset": 350,
+      "PartOfSpeech": {
+        "Tag": "NUM",
+        "Score": 0.9991629123687744
+      }
+    },
+    {
+      "TokenId": 62,
+      "Text": "#",
+      "BeginOffset": 350,
+      "EndOffset": 351,
+      "PartOfSpeech": {
+        "Tag": "SYM",
+        "Score": 0.942416787147522
+      }
+    },
+    {
+      "TokenId": 63,
+      "Text": "home",
+      "BeginOffset": 351,
+      "EndOffset": 355,
+      "PartOfSpeech": {
+        "Tag": "NOUN",
+        "Score": 0.9037477970123291
+      }
+    }
+  ]
+}
