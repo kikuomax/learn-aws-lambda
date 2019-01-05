@@ -18,9 +18,30 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-lambda_function_3
+
+lambda_function_4
 =================
 
-.. automodule:: lambda_function_3
+Environment Variables
+---------------------
+
+This function accepts the following environment variables,
+
+``COMPREHEND_S3_LOGGING_LEVEL``
+    Logging level of the function. "INFO" by default.
+
+``COMPREHEND_REGION``
+    Region where Amazon Comprehend is hosted. "us-east-2" by default.
+
+``COMPREHEND_S3_OUTPUT_BUCKET``
+    Name of the bucket where analysis results are saved. The same bucket as an input object by default.
+
+``COMPREHEND_S3_OUTPUT_FOLDER``
+    Path of a folder where analysis results are saved. "comprehend" by default. Trailing slashes ('/') are removed.
+
+Functions
+---------
+
+.. automodule:: lambda_function_4
    :members:
 
