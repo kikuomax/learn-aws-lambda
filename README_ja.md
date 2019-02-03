@@ -418,3 +418,347 @@ aws logs get-log-events --log-group-name /aws/lambda/comprehend-s3 --log-stream-
     ```
 
 4. `build`ディレクトリ内に`html`ディレクトリが作成されます。
+
+## サーバレスアプリケーションをAWS SAMで記述する
+
+[AWS CloudFormation](https://aws.amazon.com/cloudformation/)の拡張である[AWS Serverless Application Model (AWS SAM)](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)を使うと、上述したリソース確保と設定のステップをひとつのAWS SAMテンプレートファイルにまとめることができます。
+AWS SAMを初めて使う方は、[こちらのチュートリアル](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-quick-start.html)をお勧めします。
+
+基本ステップは、
+1. [記述](#aws-sam-テンプレートを記述する)
+2. [ビルド](#aws-sam-でサーバレスアプリケーションをビルドする)
+3. [パッケージ](#aws-sam-でサーバレスアプリケーションをパッケージする)
+4. [デプロイ](#aws-sam-でサーバレスアプリケーションをデプロイする)
+
+### AWS SAMテンプレートを記述する
+
+サーバレスアプリケーションのAWS SAMテンプレートとソースコードは`sam`ディレクトリにあります。
+
+- `sam`
+    - [`template.yaml`](sam/template.yaml): AWS SAMテンプレート
+    - `src`
+        - [`lambda_function_4.py`](sam/src/lambda_function_4.py): Lambdaハンドラ(前の例と一緒)
+        - [`requirements.txt`](sam/src/requirements.txt): 依存関係
+
+[`sam/template.yaml`](sam/template.yaml)はサーバレスアプリケーションを記述するAWS SAMテンプレートです。
+我々のサーバレスアプリケーションは特に依存関係がないので[`sam/src/requirements.txt`](sam/src/requirements.txt)は空のテキストです。
+
+以降のセクションは、`sam`ディレクトリで作業することを想定していますので、そちらに移動しましょう。
+
+```bash
+cd sam
+```
+
+### Dockerサービスを起動する
+
+AWS SAMで作業をする前に、Dockerサービスを起動するのを忘れないようにしましょう。
+そうしないと`sam build --use-container`コマンドを実行した際に、以下のようなエラーに出くわします。
+
+```
+2019-01-06 22:14:12 Starting Build inside a container
+2019-01-06 22:14:12 Found credentials in shared credentials file: ~/.aws/credentials
+2019-01-06 22:14:12 Building resource 'HelloWorldFunction'
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1229, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1275, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1224, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1016, in _send_output
+    self.send(msg)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 956, in send
+    self.connect()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/transport/unixconn.py", line 42, in connect
+    sock.connect(self.unix_socket)
+FileNotFoundError: [Errno 2] No such file or directory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/adapters.py", line 449, in send
+    timeout=timeout
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/util/retry.py", line 367, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1229, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1275, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1224, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1016, in _send_output
+    self.send(msg)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 956, in send
+    self.connect()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/transport/unixconn.py", line 42, in connect
+    sock.connect(self.unix_socket)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/bin/sam", line 11, in <module>
+    sys.exit(cli())
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 1066, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/decorators.py", line 64, in new_func
+    return ctx.invoke(f, obj, *args[1:], **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/build/command.py", line 94, in cli
+    skip_pull_image, parameter_overrides)  # pragma: no cover
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/build/command.py", line 132, in do_cli
+    artifacts = builder.build()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 129, in build
+    lambda_function.runtime)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 201, in _build_function
+    runtime)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 249, in _build_function_on_container
+    self._container_manager.run(container)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/local/docker/manager.py", line 75, in run
+    is_image_local = self.has_image(image_name)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/local/docker/manager.py", line 153, in has_image
+    self.docker_client.images.get(image_name)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/models/images.py", line 312, in get
+    return self.prepare_model(self.client.api.inspect_image(name))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/utils/decorators.py", line 19, in wrapped
+    return f(self, resource_id, *args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/api/image.py", line 245, in inspect_image
+    self._get(self._url("/images/{0}/json", image)), True
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/utils/decorators.py", line 46, in inner
+    return f(self, *args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/api/client.py", line 215, in _get
+    return self.get(url, **self._set_request_timeout(kwargs))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 546, in get
+    return self.request('GET', url, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/adapters.py", line 498, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))
+```
+
+このエラーメッセージは直感的ではありませんでしたが、実のところDockerサービスが走っていないということでした。
+私のケースでは、[Docker Desktop](https://www.docker.com/products/docker-desktop)をインストールして解決しました。
+
+### AWS SAMでサーバレスアプリケーションをビルドする
+
+[`sam build`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-build.html)コマンドを実行します。
+
+```bash
+sam build --use-container
+```
+
+この例では、このコマンドは必要なさそうです。
+依存関係がないからです。
+
+#### リージョンを指定する
+
+`sam build`コマンドを実行した時、リージョンが指定されていないとの文句を言われました。
+`--region`オプションを指定して、解決しました。
+
+```bash
+sam build --region ap-northeast-1 --use-container
+```
+
+### AWS SAMでサーバレスアプリケーションをパッケージする
+
+[`sam package`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-package.html)コマンドを実行する。
+
+```bash
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket artifacts-bucket
+```
+
+**注意:** `artifacts-bucket`を生成物を保存するバケット名に置き換えてください。
+
+#### プロフィールを指定する
+
+`sam package`コマンドはS3バケットにアクセスする必要があるので、十分な権限を持ったクリデンシャルを与えなければなりません。
+デフォルト以外のクリデンシャルを使いたい場合は、`sam package --help`には出てきませんが`--profile`オプションを指定することができます。
+
+```bash
+sam package --profile your-profile --template-file template.yaml --output-template-file packaged.yaml --s3-bucket artifacts-bucket
+```
+
+### AWS SAMでサーバレスアプリケーションをデプロイする
+
+[`sam deploy`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html)コマンドを実行します。
+
+```
+sam deploy --template-file packaged.yaml --stack-name comprehend-s3 --capabilities CAPABILITY_IAM
+```
+
+これで、`comprehend-s3`と名付けられた新しいスタックがCloudFormationコンソール上に現れます。
+
+### AWS SAMテンプレート内の循環参照を回避する
+
+Lambda関数がS3バケットにアクセスする権限を必要とするのと同時にS3バケットはLambda関数に通知する権限を必要とするため、以下の循環参照が発生します.
+
+Lambda関数 &rightarrow; S3バケット &rightarrow; Lambda関数 &rightarrow; ...
+
+AWS SAMテンプレート内に循環参照があると、`sam deploy`コマンドは以下のようなエラーで失敗します。
+
+```
+Failed to create the changeset: Waiter ChangeSetCreateComplete failed: Waiter encountered a terminal failure state Status: FAILED. Reason: Circular dependency between resources: [ComprehendS3FunctionTextUploadPermission, ComprehendS3FunctionRole, ComprehendS3Function, ComprehendS3Bucket]
+```
+
+[こちらの記事](https://aws.amazon.com/premiumsupport/knowledge-center/unable-validate-circular-dependency-cloudformation/)はどうやって循環参照を回避するかを解説しています。
+我々のサーバレスアプリケーションに適用するには試行錯誤が必要でした。
+
+#### S3バケットをARNで直接参照する
+
+AWS SAMテンプレート内の循環参照を断ち切るのに、[上で紹介した記事](https://aws.amazon.com/premiumsupport/knowledge-center/unable-validate-circular-dependency-cloudformation/)はS3バケットをロジカルIDではなく絶対的なARNで参照することを提案しています。
+これはS3バケットの名前を事前に知る必要があるということです。
+CloudFormationはデフォルトでS3バケットにユニークな名前を生成しますが、この挙動を抑えるためにS3バケットの名前を指定しなければなりません。
+
+```yaml
+Parameters:
+  ComprehendS3BucketName:
+    Description: 'Name of the S3 bucket where input texts and output results are saved'
+    Type: String
+    Default: 'learn-aws-lambda-comprehend-s3-bucket'
+
+Resources:
+  ComprehendS3Function:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      ...
+      Policies:
+        ...
+        # policy to get S3 objects in the inbox folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:GetObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/inbox/*'
+                # instead of '${ComprehendS3Bucket.Arn}/inbox/*'
+                # to avoid circular dependency
+        # policy to put S3 objects in the comprehend folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:PutObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/comprehend/*'
+                # instead of '${ComprehendS3Bucket.Arn}/comprehend/*'
+                # to avoid circular dependency
+    ...
+
+  ComprehendS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref ComprehendS3BucketName
+        # overrides automatic name assignment
+```
+
+#### Lambda関数の`Events`プロパティを使う
+
+私は最初、S3バケットの`NotificationConfiguration`プロパティを直接追加しようとしていました。
+しかし`NotificationConfiguration`をS3バケットに追加するだけでは十分でなく、`AWS::Lambda::Permission`リソースも定義しなければならないことに気づきました。
+これはちょっと面倒臭いなあと感じました。
+
+しかしもっといい方法があります。
+`AWS::Serveless::Function`リソースには`Events`プロパティがあり、トリガーされるイベントをそこに記述することができます。
+
+```yaml
+ComprehendS3Function:
+  Type: 'AWS::Serverless::Function'
+  Properties:
+    ...
+    Events:
+      TextUpload:
+        Type: S3
+        Properties:
+          Bucket: !Ref ComprehendS3Bucket
+          Events: 's3:ObjectCreated:Put'
+          Filter:
+            S3Key:
+              Rules:
+                - Name: prefix
+                  Value: 'inbox/'
+                - Name: suffix
+                  Value: '.txt'
+```
+
+Lambda関数の`Events`プロパティを設定した場合、`NotificationConfiguration`プロパティをS3バケットに指定する必要はありません。
+
+**注意:** イベントの`Bucket`プロパティが受け付けるのはS3バケットのロジカルIDのみです。
+私は最初、S3バケットのARNを`Bucket`プロパティに指定しており、エラーになりました。
+
+### AWS SAMテンプレートのバリデーション
+
+**注意:** これは特に重要な内容ではありません。
+
+[`sam validate`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-validate.html)というコマンドがあります。
+
+```bash
+sam validate --template template.yaml
+```
+
+`sam validate`を実行した時、以下のような奇妙なエラーに出くわしました。
+
+```
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/bin/sam", line 11, in <module>
+    sys.exit(cli())
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 1066, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/decorators.py", line 64, in new_func
+    return ctx.invoke(f, obj, *args[1:], **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/validate.py", line 30, in cli
+    do_cli(ctx, template)  # pragma: no cover
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/validate.py", line 44, in do_cli
+    validator.is_valid()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/lib/sam_template_validator.py", line 83, in is_valid
+    parameter_values={})
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/translator.py", line 60, in translate
+    deployment_preference_collection = DeploymentPreferenceCollection()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/model/preferences/deployment_preference_collection.py", line 30, in __init__
+    self.codedeploy_iam_role = self._codedeploy_iam_role()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/model/preferences/deployment_preference_collection.py", line 89, in _codedeploy_iam_role
+    ArnGenerator.generate_aws_managed_policy_arn('service-role/AWSCodeDeployRoleForLambda')
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/arn_generator.py", line 28, in generate_aws_managed_policy_arn
+    return 'arn:{}:iam::aws:policy/{}'.format(ArnGenerator.get_partition_name(),
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/arn_generator.py", line 49, in get_partition_name
+    region_string = region.lower()
+AttributeError: 'NoneType' object has no attribute 'lower'
+```
+
+[こちらで](https://github.com/awslabs/aws-sam-cli/issues/442#issuecomment-417489857)示唆されている通り、`AWS_DEFAULT_REGION`環境変数にリージョンを指定したら解決しました。
+
+```bash
+export AWS_DEFAULT_REGION=ap-northeast-1
+```
