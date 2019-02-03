@@ -425,10 +425,10 @@ aws logs get-log-events --log-group-name /aws/lambda/comprehend-s3 --log-stream-
 AWS SAMを初めて使う方は、[こちらのチュートリアル](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-quick-start.html)をお勧めします。
 
 基本ステップは、
-1. [記述](#aws-sam-テンプレートを記述する)
-2. [ビルド](#aws-sam-でサーバレスアプリケーションをビルドする)
-3. [パッケージ](#aws-sam-でサーバレスアプリケーションをパッケージする)
-4. [デプロイ](#aws-sam-でサーバレスアプリケーションをデプロイする)
+1. [記述](#aws-samテンプレートを記述する)
+2. [ビルド](#aws-samでサーバレスアプリケーションをビルドする)
+3. [パッケージ](#aws-samでサーバレスアプリケーションをパッケージする)
+4. [デプロイ](#aws-samでサーバレスアプリケーションをデプロイする)
 
 ### AWS SAMテンプレートを記述する
 
