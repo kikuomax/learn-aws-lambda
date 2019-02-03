@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Parameters:
+  ComprehendS3BucketName:
+    Description: 'Name of the S3 bucket where input texts and output results are saved'
+    Type: String
+    Default: 'learn-aws-lambda-comprehend-s3-bucket'
+
+Resources:
+  ComprehendS3Function:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: python3.7
+      Handler: lambda_function_4.lambda_handler
+      CodeUri: src
+      Description: Comprehends a text put in a specific S3 bucket
+      Policies:
+        - 'AWSLambdaBasicExecutionRole'
+        # policy to get S3 objects in the inbox folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:GetObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/inbox/*'
+                # instead of '${ComprehendS3Bucket.Arn}/inbox/*'
+                # to avoid circular dependency
+        # policy to put S3 objects in the comprehend folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:PutObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/comprehend/*'
+                # instead of '${ComprehendS3Bucket.Arn}/comprehend/*'
+                # to avoid circular dependency
+        # policy to do detection with Amazon Comprehend
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'comprehend:Detect*'
+                - 'comprehend:BatchDetect*'
+              Resource: '*'
+      Events:
+        TextUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref ComprehendS3Bucket
+            Events: 's3:ObjectCreated:Put'
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: 'inbox/'
+                  - Name: suffix
+                    Value: '.txt'
+      Environment:
+        Variables:
+          # logging level
+          COMPREHEND_S3_LOGGING_LEVEL: INFO
+          # region where Amazon Comprehend is hosted
+          COMPREHEND_REGION: us-east-2
+          # output bucket name (same bucket as the input by default)
+          # COMPREHEND_S3_OUTPUT_BUCKET: my-bucket
+          # output folder name
+          COMPREHEND_S3_OUTPUT_FOLDER: comprehend
+
+  ComprehendS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
+      # NOTE: stack deletion fails if the S3 bucket is not empty
+    Properties:
+      BucketName: !Ref ComprehendS3BucketName
+        # overrides automatic name assignment
+      # PublicAccessBlockConfiguration is not supported yet as of 1.9.x
+      # will it be supported from 1.10.x?
+      # https://github.com/awslabs/serverless-application-model/issues/679#issuecomment-456510514
+#      PublicAccessBlockConfiguration:
+#        BlockPublicAcls: true
+#        BlockPublicPolicy: true
+#        IgnorePublicAcls: true
+#        RestrictPublicBuckets: true
+
+Outputs:
+  ComprehendS3FunctionArn:
+    Value: !GetAtt ComprehendS3Function.Arn
+    Description: ARN of the Comprehend S3 Lambda function
+
+  ComprehendS3FunctionRoleArn:
+    Value: !GetAtt ComprehendS3FunctionRole.Arn
+      # it seems ComprehendS3FunctionRole is implicitly defined
+    Description: ARN of the implicit role for the Comprehend S3 Lambda function
+
+  ComprehendS3InboxArn:
+    Value: !Sub '${ComprehendS3Bucket.Arn}/inbox'
+    Description: ARN of the inbox folder
+
+  ComprehendS3OutbutArn:
+    Value: !Sub '${ComprehendS3Bucket.Arn}/comprehend'
+    Description: ARN of the output folder
