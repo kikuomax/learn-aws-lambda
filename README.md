@@ -234,7 +234,7 @@ Let's add a Amazon Comprehend analysis feature to the Lambda function.
 
 ### Allowing the Lambda function to run Amazon Comprehend
 
-Create a policy that allows detection with Amazon Comprehend.
+Create a policy that allows detection with Amazon Comprehend ([policy document](iam/policy/ComprehendDetectAny.json)).
 
 ```bash
 aws iam create-policy --policy-name ComprehendDetectAny --path /learn-aws-lambda/ --policy-document file://iam/policy/ComprehendDetectAny.json --description "Allows detection with Amazon Comprehend"
@@ -417,3 +417,348 @@ Take the following steps,
     ```
 
 4. You will find the `html` directory in the `build` directory.
+
+## Describing a serverless application with AWS SAM
+
+By using [AWS Serverless Application Model (AWS SAM)](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) which is an extension of [AWS CloudFormation](https://aws.amazon.com/cloudformation/), we can integrate resource allocation and configuration steps described above in a single AWS SAM template file.
+If you are new to AWS SAM, I recommend you to take [this tutorial](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-quick-start.html).
+
+Basic steps are,
+1. [Describe](#describing-an-aws-sam-template)
+2. [Build](#building-a-serverless-application-with-aws-sam)
+3. [Package](#packaging-a-serverless-application-with-aws-sam)
+4. [Deploy](#deploying-a-serverless-application-with-aws-sam)
+
+### Describing an AWS SAM template
+
+The AWS SAM template and source code of our serverless application are in the directory `sam`.
+
+- `sam`
+    - [`template.yaml`](sam/template.yaml): AWS SAM template
+    - `src`
+        - [`lambda_function_4.py`](sam/src/lambda_function_4.py): Lambda handler (identical to the last example)
+        - [`requirements.txt`](sam/src/requirements.txt): dependencies
+
+[`sam/template.yaml`](sam/template.yaml) is the AWS SAM template describing our serverless application.
+[`sam/src/requirements.txt`](sam/src/requirements.txt) is an empty text because our serverless application has no dependencies.
+
+The following sections suppose you are in the `sam` directory.
+So move down to it.
+
+```bash
+cd sam
+```
+
+### Starting a Docker service
+
+Before working with AWS SAM, do not forget to boot a Docker service.
+Otherwise you will get an error similar to the following when you run `sam build --use-container` command.
+
+```
+2019-01-06 22:14:12 Starting Build inside a container
+2019-01-06 22:14:12 Found credentials in shared credentials file: ~/.aws/credentials
+2019-01-06 22:14:12 Building resource 'HelloWorldFunction'
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1229, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1275, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1224, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1016, in _send_output
+    self.send(msg)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 956, in send
+    self.connect()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/transport/unixconn.py", line 42, in connect
+    sock.connect(self.unix_socket)
+FileNotFoundError: [Errno 2] No such file or directory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/adapters.py", line 449, in send
+    timeout=timeout
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/util/retry.py", line 367, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1229, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1275, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1224, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 1016, in _send_output
+    self.send(msg)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py", line 956, in send
+    self.connect()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/transport/unixconn.py", line 42, in connect
+    sock.connect(self.unix_socket)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/bin/sam", line 11, in <module>
+    sys.exit(cli())
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 1066, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/decorators.py", line 64, in new_func
+    return ctx.invoke(f, obj, *args[1:], **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/build/command.py", line 94, in cli
+    skip_pull_image, parameter_overrides)  # pragma: no cover
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/build/command.py", line 132, in do_cli
+    artifacts = builder.build()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 129, in build
+    lambda_function.runtime)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 201, in _build_function
+    runtime)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/lib/build/app_builder.py", line 249, in _build_function_on_container
+    self._container_manager.run(container)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/local/docker/manager.py", line 75, in run
+    is_image_local = self.has_image(image_name)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/local/docker/manager.py", line 153, in has_image
+    self.docker_client.images.get(image_name)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/models/images.py", line 312, in get
+    return self.prepare_model(self.client.api.inspect_image(name))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/utils/decorators.py", line 19, in wrapped
+    return f(self, resource_id, *args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/api/image.py", line 245, in inspect_image
+    self._get(self._url("/images/{0}/json", image)), True
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/utils/decorators.py", line 46, in inner
+    return f(self, *args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/docker/api/client.py", line 215, in _get
+    return self.get(url, **self._set_request_timeout(kwargs))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 546, in get
+    return self.request('GET', url, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/requests/adapters.py", line 498, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))
+```
+
+The error message was not very intuitive but actually meant no Docker service was running.
+In my case, I just installed [Docker Desktop](https://www.docker.com/products/docker-desktop) to resolve it.
+
+### Building a serverless application with AWS SAM
+
+Run the [`sam build`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-build.html) command.
+
+```bash
+sam build --use-container
+```
+
+In this example, the command may not matter.
+Because this example has no dependencies.
+
+#### Specifying the region
+
+When I ran the `sam build` command, it complained that no region was specified.
+If I supplied the `--region` option, it was resolved.
+
+```bash
+sam build --region ap-northeast-1 --use-container
+```
+
+### Packaging a serverless application with AWS SAM
+
+Run the [`sam package`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-package.html) command.
+
+```bash
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket artifacts-bucket
+```
+
+**NOTE:** You have to replace `artifacts-bucket` with the bucket where you want to store artifacts.
+
+#### Specifying a profile
+
+Because the `sam package` command needs to access an S3 bucket, you have to provide a credential with sufficient privileges.
+If you want to use a credential other than default, you can specify the `--profile` option even though `sam package --help` does not show it.
+
+```bash
+sam package --profile your-profile --template-file template.yaml --output-template-file packaged.yaml --s3-bucket artifacts-bucket
+```
+
+### Deploying a serverless application with AWS SAM
+
+Run the [`sam deploy`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html) command.
+
+```
+sam deploy --template-file packaged.yaml --stack-name comprehend-s3 --capabilities CAPABILITY_IAM
+```
+
+Now, you will find a new stack named `comprehend-s3` on the CloudFormation console.
+
+### Avoiding circular dependency in an AWS SAM template
+
+Because the Lambda function needs privileges to access the S3 bucket and at the same time the S3 bucket needs a privilege to notify the Lambda function, they have the following circular dependency.
+
+Lambda Function &rightarrow; S3 Bucket &rightarrow; Lambda Function &rightarrow; ...
+
+If you have circular dependency in your AWS SAM template, the `sam deploy` command fails with an error similar to the following,
+
+```
+Failed to create the changeset: Waiter ChangeSetCreateComplete failed: Waiter encountered a terminal failure state Status: FAILED. Reason: Circular dependency between resources: [ComprehendS3FunctionTextUploadPermission, ComprehendS3FunctionRole, ComprehendS3Function, ComprehendS3Bucket]
+```
+
+[This article](https://aws.amazon.com/premiumsupport/knowledge-center/unable-validate-circular-dependency-cloudformation/) explains how to avoid circular dependencies.
+I needed some trial and error to adapt it to our serverless application.
+
+#### Directly referencing an S3 bucket by ARN
+
+To break circular dependency in an AWS SAM template, [the article introduced above](https://aws.amazon.com/premiumsupport/knowledge-center/unable-validate-circular-dependency-cloudformation/) suggests referencing an S3 bucket with its absolute ARN instead of its logical ID.
+This means you need to know the name of the S3 bucket in advance.
+Because CloudFormation generates a unique name for an S3 bucket by default, you have to override this behavior by giving a predictable name to the S3 bucket.
+
+```yaml
+Parameters:
+  ComprehendS3BucketName:
+    Description: 'Name of the S3 bucket where input texts and output results are saved'
+    Type: String
+    Default: 'learn-aws-lambda-comprehend-s3-bucket'
+
+Resources:
+  ComprehendS3Function:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      ...
+      Policies:
+        ...
+        # policy to get S3 objects in the inbox folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:GetObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/inbox/*'
+                # instead of '${ComprehendS3Bucket.Arn}/inbox/*'
+                # to avoid circular dependency
+        # policy to put S3 objects in the comprehend folder
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:PutObject'
+              Resource: !Sub 'arn:aws:s3:::${ComprehendS3BucketName}/comprehend/*'
+                # instead of '${ComprehendS3Bucket.Arn}/comprehend/*'
+                # to avoid circular dependency
+    ...
+
+  ComprehendS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref ComprehendS3BucketName
+        # overrides automatic name assignment
+```
+
+#### Using `Events` property of a Lambda function
+
+At first I was trying to directly add the `NotificationConfiguration` property to the S3 bucket.
+And I noticed that just adding `NotificationConfiguration` to the S3 bucket was not sufficient, but an `AWS::Lambda::Permission` resource also had to be defined.
+I felt it somewhat cumbersome.
+
+But there is a better way to address it.
+An `AWS::Serveless::Function` resource can have an `Events` property and you can describe events to be triggered there.
+
+```yaml
+ComprehendS3Function:
+  Type: 'AWS::Serverless::Function'
+  Properties:
+    ...
+    Events:
+      TextUpload:
+        Type: S3
+        Properties:
+          Bucket: !Ref ComprehendS3Bucket
+          Events: 's3:ObjectCreated:Put'
+          Filter:
+            S3Key:
+              Rules:
+                - Name: prefix
+                  Value: 'inbox/'
+                - Name: suffix
+                  Value: '.txt'
+```
+
+If you configure the `Events` property of the Lambda function, you do not need to specify the `NotificationConfiguration` property to the S3 bucket.
+
+**NOTE:** The `Bucket` property of an event only accepts a logical ID of an S3 bucket.
+At first I specified an ARN of the S3 bucket to the `Bucket` property and I got an error.
+
+### Validating an AWS SAM template
+
+**NOTE:** This is not essential part of this document.
+
+There is the [`sam validate`](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-validate.html) command.
+
+```bash
+sam validate --template template.yaml
+```
+
+When I ran `sam validate`, I got the following wierd error,
+
+```
+Traceback (most recent call last):
+  File "/Users/kikuo/Library/Python/3.7/bin/sam", line 11, in <module>
+    sys.exit(cli())
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 1066, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/decorators.py", line 64, in new_func
+    return ctx.invoke(f, obj, *args[1:], **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/validate.py", line 30, in cli
+    do_cli(ctx, template)  # pragma: no cover
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/validate.py", line 44, in do_cli
+    validator.is_valid()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samcli/commands/validate/lib/sam_template_validator.py", line 83, in is_valid
+    parameter_values={})
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/translator.py", line 60, in translate
+    deployment_preference_collection = DeploymentPreferenceCollection()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/model/preferences/deployment_preference_collection.py", line 30, in __init__
+    self.codedeploy_iam_role = self._codedeploy_iam_role()
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/model/preferences/deployment_preference_collection.py", line 89, in _codedeploy_iam_role
+    ArnGenerator.generate_aws_managed_policy_arn('service-role/AWSCodeDeployRoleForLambda')
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/arn_generator.py", line 28, in generate_aws_managed_policy_arn
+    return 'arn:{}:iam::aws:policy/{}'.format(ArnGenerator.get_partition_name(),
+  File "/Users/kikuo/Library/Python/3.7/lib/python/site-packages/samtranslator/translator/arn_generator.py", line 49, in get_partition_name
+    region_string = region.lower()
+AttributeError: 'NoneType' object has no attribute 'lower'
+```
+
+As it is suggested [here](https://github.com/awslabs/aws-sam-cli/issues/442#issuecomment-417489857), it was resolved if I specified the region to the `AWS_DEFAULT_REGION` environment variable.
+
+```bash
+export AWS_DEFAULT_REGION=ap-northeast-1
+```
