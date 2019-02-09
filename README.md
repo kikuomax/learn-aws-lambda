@@ -2,6 +2,49 @@
 
 English/[日本語](README_ja.md)
 
+**Table of Contents**
+
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 indent:ICAgIA== -->
+
+- [Getting Started with AWS Lambda](#getting-started-with-aws-lambda)
+    - [Introduction](#introduction)
+    - [Creating a Lambda function](#creating-a-lambda-function)
+        - [Creating a dedicated role](#creating-a-dedicated-role)
+        - [Deploying initial code](#deploying-initial-code)
+    - [Triggering the Lambda function from S3](#triggering-the-lambda-function-from-s3)
+        - [Creating a dedicated S3 bucket](#creating-a-dedicated-s3-bucket)
+        - [Adding a permission for S3 to the Lambda function](#adding-a-permission-for-s3-to-the-lambda-function)
+        - [Adding a trigger to the S3 bucket](#adding-a-trigger-to-the-s3-bucket)
+        - [Putting an object into the bucket](#putting-an-object-into-the-bucket)
+    - [Obtaining the contents of a given S3 object from the Lambda function](#obtaining-the-contents-of-a-given-s3-object-from-the-lambda-function)
+        - [Allowing the Lambda function to get S3 objects from the bucket](#allowing-the-lambda-function-to-get-s3-objects-from-the-bucket)
+        - [Updating the Lambda function](#updating-the-lambda-function)
+        - [Testing if the Lambda function works](#testing-if-the-lambda-function-works)
+    - [Processing a text with Amazon Comprehend](#processing-a-text-with-amazon-comprehend)
+        - [Allowing the Lambda function to run Amazon Comprehend](#allowing-the-lambda-function-to-run-amazon-comprehend)
+        - [Updating the Lambda function](#updating-the-lambda-function)
+        - [Changing logging level of the Lambda function](#changing-logging-level-of-the-lambda-function)
+    - [Saving analysis results as an S3 object](#saving-analysis-results-as-an-s3-object)
+        - [Allowing the Lambda function to PUT an S3 object](#allowing-the-lambda-function-to-put-an-s3-object)
+        - [Updating the Lambda function](#updating-the-lambda-function)
+        - [Testing if the Lambda function works](#testing-if-the-lambda-function-works)
+        - [Retrieving the latest logs through CLI](#retrieving-the-latest-logs-through-cli)
+    - [Generating documentation with Sphinx](#generating-documentation-with-sphinx)
+    - [Describing a serverless application with AWS SAM](#describing-a-serverless-application-with-aws-sam)
+        - [Describing an AWS SAM template](#describing-an-aws-sam-template)
+        - [Starting a Docker service](#starting-a-docker-service)
+        - [Building a serverless application with AWS SAM](#building-a-serverless-application-with-aws-sam)
+            - [Specifying the region](#specifying-the-region)
+        - [Packaging a serverless application with AWS SAM](#packaging-a-serverless-application-with-aws-sam)
+            - [Specifying a profile](#specifying-a-profile)
+        - [Deploying a serverless application with AWS SAM](#deploying-a-serverless-application-with-aws-sam)
+        - [Avoiding circular dependency in an AWS SAM template](#avoiding-circular-dependency-in-an-aws-sam-template)
+            - [Directly referencing an S3 bucket by ARN](#directly-referencing-an-s3-bucket-by-arn)
+            - [Using `Events` property of a Lambda function](#using-events-property-of-a-lambda-function)
+        - [Validating an AWS SAM template](#validating-an-aws-sam-template)
+
+<!-- /TOC -->
+
 ## Introduction
 
 This repository is just a note for myself, but I hope someone might feel this useful.
