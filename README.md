@@ -42,6 +42,8 @@ English/[日本語](README_ja.md)
             - [Directly referencing an S3 bucket by ARN](#directly-referencing-an-s3-bucket-by-arn)
             - [Using `Events` property of a Lambda function](#using-events-property-of-a-lambda-function)
         - [Validating an AWS SAM template](#validating-an-aws-sam-template)
+    - [Appendix](#appendix)
+        - [How was the table of contents in this document generated?](#how-was-the-table-of-contents-in-this-document-generated)
 
 <!-- /TOC -->
 
@@ -804,4 +806,19 @@ As it is suggested [here](https://github.com/awslabs/aws-sam-cli/issues/442#issu
 
 ```bash
 export AWS_DEFAULT_REGION=ap-northeast-1
+```
+
+## Appendix
+
+### How was the table of contents in this document generated?
+
+I used a [slightly modified version](https://github.com/kikuomax/markdown-toc) of the [Atom](https://atom.io) plug-in [markdown-toc](https://github.com/nok/markdown-toc), which has the following additional features,
+- [Support of underscore character](https://github.com/Sorix/markdown-toc/commit/31c9e1bb6b37d692cde2395ad8f1e9c8a555d365) introduced by [Sorix](https://github.com/Sorix)
+- [Support of non-latin characters](https://github.com/Sorix/markdown-toc/commit/1d5482e3bc3dd1339190eeb9a7e6c000871df888) introduced by [Sorix](https://github.com/Sorix)
+- [`indent` option](https://github.com/kikuomax/markdown-toc/commit/40172017e833552fa109817ba42bb35e24291abc)
+
+To enable the plug-in you can do as follows,
+
+```bash
+apm install kikuomax/markdown-toc
 ```

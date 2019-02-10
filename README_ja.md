@@ -42,6 +42,8 @@
             - [S3バケットをARNで直接参照する](#s3バケットをarnで直接参照する)
             - [Lambda関数の`Events`プロパティを使う](#lambda関数のeventsプロパティを使う)
         - [AWS SAMテンプレートのバリデーション](#aws-samテンプレートのバリデーション)
+    - [おまけ](#おまけ)
+        - [この文書の目次を生成する方法?](#この文書の目次を生成する方法)
 
 <!-- /TOC -->
 
@@ -804,4 +806,20 @@ AttributeError: 'NoneType' object has no attribute 'lower'
 
 ```bash
 export AWS_DEFAULT_REGION=ap-northeast-1
+```
+
+## おまけ
+
+### この文書の目次を生成する方法?
+
+[Atom](https://atom.io)プラグインの[markdown-toc](https://github.com/nok/markdown-toc)を[ちょっと変更したバージョン](https://github.com/kikuomax/markdown-toc)を使っています。
+このプラグインには以下の機能が追加されています。
+- [Support of underscore character](https://github.com/Sorix/markdown-toc/commit/31c9e1bb6b37d692cde2395ad8f1e9c8a555d365) introduced by [Sorix](https://github.com/Sorix)
+- [Support of non-latin characters](https://github.com/Sorix/markdown-toc/commit/1d5482e3bc3dd1339190eeb9a7e6c000871df888) introduced by [Sorix](https://github.com/Sorix)
+- [`indent`オプション](https://github.com/kikuomax/markdown-toc/commit/40172017e833552fa109817ba42bb35e24291abc)
+
+このプラグインを有効にするには以下のようにします。
+
+```bash
+apm install kikuomax/markdown-toc
 ```
